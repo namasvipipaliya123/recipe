@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Recipe</title>
+</head>
+<body>
+    <h1>Add Recipe</h1>
+    <form id="recipeForm">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br>
+        <label for="description">Description:</label><br>
+        <input type="text" id="description" name="description" required><br>
+        <label for="preparationTime">Preparation Time:</label><br>
+        <input type="text" id="preparationTime" name="preparationTime" required><br>
+        <label for="cookingTime">Cooking Time:</label><br>
+        <input type="text" id="cookingTime" name="cookingTime" required><br>
+        <label for="imageUrl">Image URL:</label><br>
+        <input type="text" id="imageUrl" name="imageUrl" required><br>
+        <label for="country">Country:</label><br>
+        <input type="text" id="country" name="country" required><br>
+        <label for="veg">Vegetarian:</label><br>
+        <input type="checkbox" id="veg" name="veg"><br><br>
+        <button type="submit">Add Recipe</button>
+    </form>
+    <script>
+        document.getElementById('recipeForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            const data = {
+                name: formData.get('name'),
+                description: formData.get('description'),
+                preparationTime: formData.get('preparationTime'),
+                cookingTime: formData.get('cookingTime'),
+                imageUrl: formData.get('imageUrl'),
+                country: formData.get('country'),
+                veg: formData.get('veg') === 'on'
+            };
+            fetch('/recipe/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Recipe added successfully!');
+                document.getElementById('recipeForm').reset();
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
